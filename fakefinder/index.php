@@ -27,7 +27,7 @@ require_once("facebook.php");
     $user       = $facebook->getUser();
     $loginUrl   = $facebook->getLoginUrl(
             array(
-                'scope' => 'user_about_me, friends_about_me, user_birthday, friends_birthday, user_education_history, friends_education_history, user_groups, friends_groups, user_hometown, friends_hometown, user_likes, friends_likes, user_photos, friends_photos, user_status, friends_status, user_work_history, friends_work_history, read_friendlists'
+                'scope' => 'user_about_me, friends_about_me, user_birthday, friends_birthday, user_education_history, friends_education_history, user_groups, friends_groups, user_hometown, friends_hometown, user_likes, friends_likes, user_photos, friends_photos, user_status, friends_status, user_work_history, friends_work_history, read_friendlists, user_location, friends_location, user_photo_video_tag, friends_photo_video_tag'
             )
     );
 	if ($user) {
@@ -61,24 +61,15 @@ require_once("facebook.php");
 
 $fcount = count($friends['data']);
 
+echo "<select>";
+
 foreach ($friends['data'] as $val){
-	echo $val['name'];
-	echo "<img src=' http://graph.facebook.com/" . $val['id'] . "/picture'><br/>";
+	echo "<option value='" . $val['id'] . "'>" . $val['name'] . "</option>";
 }
 
-
-
-
+echo "</select>";
 
 ?>
-
-
-
-
-
-
-
-<p>hi</p>
 
 </body>
 </html>
