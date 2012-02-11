@@ -59,10 +59,14 @@ require_once("facebook.php");
   }
 }
 
-$friendslist = array_slice($friends[data], 0, 25);
-foreach ($friendslist as $friend) {
-	  echo "<br><fb:profile-pic uid=\"$friend[id]\" width=\"50\" height=\"50\" /><fb:name uid=\"$friend[id]\" />";
-}   
+$fcount = count($friends['data']);
+
+foreach ($friends['data'] as $val){
+	echo $val['name'];
+	echo "<img src=' http://graph.facebook.com/" . $val['id'] . "/picture'><br/>";
+}
+
+
 
 
 
