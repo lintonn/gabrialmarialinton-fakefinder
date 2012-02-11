@@ -27,7 +27,7 @@ require_once("facebook.php");
     $user       = $facebook->getUser();
     $loginUrl   = $facebook->getLoginUrl(
             array(
-                'scope' => 'email,publish_stream,user_birthday,user_location,user_work_history,user_about_me,user_hometown,user_likes,friends_likes,user_photos,friends_photos,user_work_history,'
+                'scope' => 'user_about_me, friends_about_me, user_birthday, friends_birthday, user_education_history, friends_education_history, user_groups, friends_groups, user_hometown, friends_hometown, user_likes, friends_likes, user_photos, friends_photos, user_status, friends_status, user_work_history, friends_work_history, read_friendlists'
             )
     );
 	if ($user) {
@@ -47,8 +47,30 @@ require_once("facebook.php");
     }
 	
 	//get user basic description
-    $userInfo = $facebook->api(/$user);
+    $userInfo = $facebook->api($user);
+	
+	if ($user) {
+  try {
+    // Proceed knowing you have a logged in user who's authenticated.
+    $friends = $facebook->api('/me/friends');
+  } catch (FacebookApiException $e) {
+    error_log($e);
+    $user = null;
+  }
+}
+
+$friendslist = array_slice($friends[data], 0, 25);
+foreach ($friendslist as $friend) {
+	  echo "<br><fb:profile-pic uid=\"$friend[id]\" width=\"50\" height=\"50\" /><fb:name uid=\"$friend[id]\" />";
+}   
+
+
+
 ?>
+
+
+
+
 
 
 
