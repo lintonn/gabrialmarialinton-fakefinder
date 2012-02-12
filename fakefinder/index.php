@@ -61,13 +61,14 @@ require_once("facebook.php");
 
 $fcount = count($friends['data']);
 
-echo "<select>";
+echo "<form action='metrics.php' method='post'><select name='friendid'>";
 
 foreach ($friends['data'] as $val){
 	echo "<option value='" . $val['id'] . "'>" . $val['name'] . "</option>";
 }
+echo "<input type='submit'/>";
 
-echo "</select>";
+echo "</select></form>";
 
 ?>
 
