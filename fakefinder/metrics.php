@@ -7,6 +7,39 @@
 
 <body>
 <?php
+
+function erf($x) 
+{ 
+        $pi = 3.1415927; 
+        $a = (8*($pi - 3))/(3*$pi*(4 - $pi)); 
+        $x2 = $x * $x; 
+
+        $ax2 = $a * $x2; 
+        $num = (4/$pi) + $ax2; 
+        $denom = 1 + $ax2; 
+
+        $inner = (-$x2)*$num/$denom; 
+        $erf2 = 1 - exp($inner); 
+
+        return sqrt($erf2); 
+} 
+
+function cdf($n) 
+{ 
+        if($n < 0) 
+        { 
+                return (1 - erf($n / sqrt(2)))/2; 
+        } 
+        else 
+        { 
+                return (1 + erf($n / sqrt(2)))/2; 
+        } 
+} 
+
+
+?>
+
+<?php
 require_once("facebook.php");
 
   $config = array();
@@ -55,9 +88,8 @@ require_once("facebook.php");
 
 	set_time_limit(0);
 
-	foreach($friends['data'] as $val){
-		
-		$friendfeed = $facebook->api($val['id'] . '/feed?limit=500');
+	
+		$friendfeed = $facebook->api($_POST['friendid'] . '/feed?limit=500');
 			
 		$last = count($friendfeed['data']) - 1;
 		
@@ -72,10 +104,28 @@ require_once("facebook.php");
 		
 		$interval = $oldtime->diff($newtime);
 		$postday = $interval->format('%R%a days');
-		echo $postday/$last . "<br/>";
+		
+		$metric = $last/$postday;
+		
+		$avg = 0.799061;
+		$std = 0.706539;
+		$f = 0.474736;
+		$e = 2.71828;
+		
+		$score = $f*2*pow($e,-(pow($metric - $avg,2)/(2*pow($std,2))));
+		
+		echo 'Mean: ' . $avg . "<br>";
+		echo 'Std: ' . $std . "<br>";
+		echo "<br>";
+		echo $postday . "<br>";
+		echo $last . "<br>";
+		echo 'Score: ' . $metric . "<br>";
+		echo 'Percentile: ' . $score
+		
+		
 		
 				
-	}
+		
 	
 	
 
