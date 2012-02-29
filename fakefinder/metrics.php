@@ -6,38 +6,6 @@
 </head>
 
 <body>
-<?php
-
-function erf($x) 
-{ 
-        $pi = 3.1415927; 
-        $a = (8*($pi - 3))/(3*$pi*(4 - $pi)); 
-        $x2 = $x * $x; 
-
-        $ax2 = $a * $x2; 
-        $num = (4/$pi) + $ax2; 
-        $denom = 1 + $ax2; 
-
-        $inner = (-$x2)*$num/$denom; 
-        $erf2 = 1 - exp($inner); 
-
-        return sqrt($erf2); 
-} 
-
-function cdf($n) 
-{ 
-        if($n < 0) 
-        { 
-                return (1 - erf($n / sqrt(2)))/2; 
-        } 
-        else 
-        { 
-                return (1 + erf($n / sqrt(2)))/2; 
-        } 
-} 
-
-
-?>
 
 <?php
 require_once("facebook.php");
@@ -86,9 +54,9 @@ require_once("facebook.php");
   }
 }
 
-	set_time_limit(0);
 
-	
+	function feedmetric($facebook){
+
 		$friendfeed = $facebook->api($_POST['friendid'] . '/feed?limit=500');
 			
 		$last = count($friendfeed['data']) - 1;
@@ -114,20 +82,35 @@ require_once("facebook.php");
 		
 		$score = $f*2*pow($e,-(pow($metric - $avg,2)/(2*pow($std,2))));
 		
-		echo 'Mean: ' . $avg . "<br>";
-		echo 'Std: ' . $std . "<br>";
-		echo "<br>";
-		echo $postday . "<br>";
-		echo $last . "<br>";
-		echo 'Score: ' . $metric . "<br>";
-		echo 'Percentile: ' . $score
 		
+		echo 'Feed Percentile: ' . $score . "<br/>";	
 		
+	}
+	
+	
+	function mutualfriendsmetric($friends, $facebook){
 		
+
+			$mfriends = $facebook->api('me/mutualfriends/' . $_POST['friendid'] );
+			
+			$mfcount = count($mfriends['data']);
+			
+			$mfmean = 96.9345;
+			
+			$mfscore = min(2*(1-(($mfmean - $mfcount)/$mfmean)),1);
+			
+			
+			echo 'Mutual Friend Percentile: ' . $mfscore . "<br/>";
+			
+		
+	}
 				
-		
-	
-	
+?>
+
+<?php
+
+	mutualfriendsmetric($friends, $facebook);
+	feedmetric($facebook);
 
 ?>
 </body>
