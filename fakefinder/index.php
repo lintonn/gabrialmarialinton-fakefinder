@@ -63,7 +63,7 @@ require_once("facebook.php");
 $fcount = count($friends['data']);
 echo"<p> Select a friend you want to review</p>";
 
-echo "<form action='picture.php' method='post'>
+echo "<form action='metrics.php' method='post'>
 <select name='friendid'>";
 
 foreach ($friends['data'] as $val){
