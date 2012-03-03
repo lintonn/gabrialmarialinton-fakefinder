@@ -104,13 +104,40 @@ require_once("facebook.php");
 			
 		
 	}
+	
+	function statusmetric($friends, $facebook){
+		
+		set_time_limit(0);
+			
+			foreach($friends['data'] as $val){
+				$statuses = $facebook->api($val['id'] . "/statuses");
+				
+				$last = count($statuses['data']) - 1;
+		
+		$oldest = array_slice($statuses['data'],$last);
+		$newest = array_slice($statuses['data'],0,1);
+	
+		$newpost = $newest[0]['updated_time'];
+		$oldpost = $oldest[0]['updated_time'];
+		
+		$newtime = new DateTime($newpost);
+		$oldtime = new DateTime($oldpost);
+		
+		$interval = $oldtime->diff($newtime);
+		$postday = $interval->format('%R%a days');
+		
+		$metric = $last/$postday;
+		
+		echo $metric . "<br/>";
+				
+			}
+	}
 				
 ?>
 
 <?php
 
-	mutualfriendsmetric($friends, $facebook);
-	feedmetric($facebook);
+	statusmetric($friends, $facebook);
 
 ?>
 </body>
