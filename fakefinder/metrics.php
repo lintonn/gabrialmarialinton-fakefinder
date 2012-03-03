@@ -83,7 +83,7 @@ require_once("facebook.php");
 		$score = $f*2*pow($e,-(pow($metric - $avg,2)/(2*pow($std,2))));
 		
 		
-		echo 'Feed Percentile: ' . $score . "<br/>";	
+		return $score;	
 		
 	}
 	
@@ -100,17 +100,39 @@ require_once("facebook.php");
 			$mfscore = min(2*(1-(($mfmean - $mfcount)/$mfmean)),1);
 			
 			
-			echo 'Mutual Friend Percentile: ' . $mfscore . "<br/>";
+			return $mfscore;
 			
 		
 	}
+	
+	function picturemetric($facebook){
+		
+		$photos = $facebook->api($_POST['friendid'] . '/photos' . '/?limit=1500&offset=0'); 
+ 
+		$pcount = count($photos['data']);
+		
+		$mean = 301.4435;
+		$stdev = 329.8105961;
+		$e = 2.718;
+		$pi = 3.14;
+		
+		$probability = min(1,1-(($mean-$pcount)/$mean));
+		
+		return $probability;
+
+		
+	}
+	
 				
 ?>
 
 <?php
-
-	mutualfriendsmetric($friends, $facebook);
-	feedmetric($facebook);
+	
+	set_time_limit(0);
+	$m1 = mutualfriendsmetric($friends, $facebook);
+	$m2 = feedmetric($facebook);
+	$m3 = picturemetric($facebook);
+	echo $m1 . "<br/>" . $m2 . "<br/>" . $m3 . "<br/>" . ($m1+$m2+$m3)/3;
 
 ?>
 </body>
