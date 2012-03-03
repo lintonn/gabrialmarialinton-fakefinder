@@ -12,7 +12,6 @@ xmlns:fb="http://www.facebook.com/2008/fbml">
 	<meta property="og:description" content="Description of page content" />
 </head>
 <body>
-
 <?php
 require_once("facebook.php");
 
@@ -53,25 +52,57 @@ require_once("facebook.php");
 	if ($user) {
   try {
     // Proceed knowing you have a logged in user who's authenticated.
-    $friends = $facebook->api('/me/friends');
+  $friends = $facebook->api('/me/friends');
   } catch (FacebookApiException $e) {
     error_log($e);
     $user = null;
   }
 }
+set_time_limit(0);
+ 
+ 
+$photos = $facebook->api($_POST['friendid'] . '/photos' . '/?limit=1500&offset=0'); 
+ 
+$pcount = count($photos['data']);
+echo 'Number Of Photos: ' . $pcount;
 
-$fcount = count($friends['data']);
-echo"<p> Select a friend you want to review</p>";
+echo "<br>";
 
-echo "<form action='picture.php' method='post'>
-<select name='friendid'>";
+/*$albums = $facebook->api($_POST['friendid'] . '/albums' . '/?limit=350&offset=0');
+$acount = count($albums['data']);
+echo $acount;
 
-foreach ($friends['data'] as $val){
-	echo "<option value='" . $val['id'] . "'>" . $val['name'] . "</option>";
+echo $albums['Profile Pictures'][ 'count'];
+echo"<br>";
+*/
+
+
+$mean = 301.4435;
+$stdev = 329.8105961;
+$e = 2.718;
+$pi = 3.14;
+
+$probability = 2*(1 / (sqrt(2 * $pi) * $stdev)) * pow($e,-(pow($pcount-$mean,2)/ (2*pow($stdev,2))));
+
+echo 'Probability: ' . $probability;
+
+
+/*if ($pcount > $mean){
+echo "100%";}
+else{ 
+echo $pcount / $mean;
 }
-echo "<input type='submit'/>";
+*/
 
-echo "</select></form>";
+/*foreach($friends['data'] as $val){
+$photos = $facebook->api($val['id'] . '/photos' . '/?limit=1500&offset=0');
+$pcount = count($photos['data']);
+echo "$pcount"; 
+echo "<br>";
+}
+*/
+
+
 
 ?>
 
