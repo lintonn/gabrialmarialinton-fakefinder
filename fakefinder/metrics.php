@@ -123,6 +123,43 @@ require_once("facebook.php");
 		
 	}
 	
+	function educationmetric($facebook, $user, $friend){
+		
+		if(!array_key_exists('education',$user) or !array_key_exists('education',$friend))
+		{
+			return 0;	
+		}
+		else
+		{
+			foreach($user['education'] as $mschool){
+				foreach($friend['education'] as $fschool){
+					if ($mschool['school']==$fschool['school']){
+						return 1;	
+					}
+				}
+			}
+			return 0;
+		}
+	}
+	
+	function familymetric($facebook){
+		$userfam = $facebook->api('me/family');
+	
+		if(count($userfam) == 0)
+		{
+			return 0;	
+		}
+		else
+		{
+			foreach($userfam as $mrel){
+				if($mrel['id'] = $_POST['friendid']){
+					return 1.5;	
+				}
+			}
+			return 0;
+		}
+	}
+	
 				
 ?>
 
@@ -132,7 +169,19 @@ require_once("facebook.php");
 	$m1 = mutualfriendsmetric($friends, $facebook);
 	$m2 = feedmetric($facebook);
 	$m3 = picturemetric($facebook);
-	echo $m1 . "<br/>" . $m2 . "<br/>" . $m3 . "<br/>" . ($m1+$m2+$m3)/3;
+	
+	$user = $facebook->api('me');
+	$friend = $facebook->api($_POST['friendid']);
+	
+	$denom = 3;
+	
+	$m4 = educationmetric($facebook, $user, $friend);
+	
+	$m5 = familymetric($facebook);
+	
+		
+	
+	echo $m1 . "<br/>" . $m2 . "<br/>" . $m3 . "<br/>" . $m4 . "<br/>" . $m5 . "<br/>" . ($m1+$m2+$m3+$m4+$m5)/($denom+$m4+$m5);
 
 ?>
 </body>
